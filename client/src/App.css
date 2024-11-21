@@ -1,0 +1,5 @@
+.playground{
+    width:100%;
+    height: calc(100vh - 1rem);
+    /* outline:2px solid red; */
+}

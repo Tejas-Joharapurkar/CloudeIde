@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.mainFolderContainer{
+    height: calc(100% - 2rem);
+    background: #161A1D;
+    padding:1rem;
+}
+.folderContainer {
+    display: flex;
+    flex-direction: column;
+    border-left: 0.5px solid #ccc;
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    /* outline: 2px solid green; */
+}
+
+.folderName {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    /* outline: 2px solid blue; */
+}
+
+.folderButtons {
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    /* outline: 1px solid red; */
+    text-align: center;
+}
+
+.folderButtons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+.createFileForm {
+    display: flex;
+}
+
+.createFileInput {
+    font-size: 14px;
+    width: 140px;
+    cursor: text;
+    background: none;
+    border: none;
+}
+
+.folderChildren {
+    margin-left: 5px;
+}
+
+.file {
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.file:hover {
+    background-color: #f0f0f0;
+    border-radius: 3px;
+}

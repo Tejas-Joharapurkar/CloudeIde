@@ -1,0 +1,84 @@
+/* Parent container for the editor */
+.editor-container {
+    height: calc(100vh - 4rem); /* Matches height with tabs and editor area */
+    width: 100%;
+}
+
+/* Parent container for editing space */
+.editing-space {
+    width: 100%;
+    height: 100%;
+    /* outline: 2px solid blue; */
+}
+
+/* Tabs container */
+.tabs-container {
+    width: calc(100%);
+    height: calc(2rem - 2px); 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #03040442;
+    /* background: red; */
+    overflow-x: auto; 
+    white-space: nowrap; 
+}
+
+/* Individual tab */
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem; /* Consistent padding */
+    background-color: #3a3a3a;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevent tabs from shrinking */
+    border-radius: 4px; /* Added subtle rounding */
+    margin-right: 0.5rem; /* Space between tabs */
+    transition: background-color 0.2s ease;
+}
+
+/* Active tab styling */
+.tab.active {
+    border-bottom: 2px solid #007acc;
+    background-color: #4a4a4a;
+}
+
+/* Close icon styling */
+.close-icon {
+    visibility: hidden;
+    margin-left: 0.5rem;
+    color: red;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+}
+
+/* Show close icon on hover */
+.tab:hover .close-icon {
+    visibility: visible;
+    color: #ff5a5f; /* Highlight close icon on hover */
+}
+
+/* Placeholder for empty editor */
+.placeholder {
+    text-align: center;
+    background: #101214;
+    height: calc(100vh - 5rem); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem; 
+}
+
+.placeholder h2 {
+    color: #ffffff;
+    margin-bottom: 0.5rem; /* Added margin for spacing */
+}
+
+.placeholder h4 {
+    color: #aaaaaa;
+    margin: 0; /* No extra margins */
+}
