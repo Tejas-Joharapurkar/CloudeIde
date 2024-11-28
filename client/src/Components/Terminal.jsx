@@ -1,74 +1,63 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useSelector } from "react-redux"
+import React, { useEffect, useRef,useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import WebSocketService from '../utils/WebSocketService';
+import { Terminal as XTerm } from 'xterm';
+import 'xterm/css/xterm.css';
 
 const Terminal = () => {
-    const { socket } = useSelector(state => state.container);
-    const [output, setOutput] = useState("");
-    const [input, setInput] = useState("");
-    const inputRef = useRef(null);
+    const { projectName } = useParams();
+    const terminalRef = useRef(null); 
+    const xtermRef = useRef(null); 
+
+    const socket = useMemo(() => {
+        return WebSocketService.getSocket(`ws://${projectName}.8000.localhost:80?replId=${projectName}`);
+    }, []);
+
     useEffect(() => {
+        xtermRef.current = new XTerm({
+            theme: {
+                background: '#242424',
+                foreground: '#ffffff',
+            },
+            cursorBlink: true,
+            cols:70
+        });
+        if (terminalRef.current) {
+            xtermRef.current.open(terminalRef.current);
+            xtermRef.current.write('Connecting to terminal...\r\n');
+        }
         if (socket) {
-            socket.sendMessage(JSON.stringify({ type: 'get-terminal', terminalId: 1 }))
+            socket.sendMessage(JSON.stringify({ type: 'get-terminal', terminalId: 1 }));
             const handleTerminalOutput = (data) => {
-                setOutput((prev) => prev + data.data);
-            }
-            const handleFolerChange = () => {
-                alert("folder changed/created")
-            }
+                xtermRef.current.write(data.data);
+            };
+            socket.addListener('terminal-output', handleTerminalOutput);
+            xtermRef.current.onData((input) => {
+                socket.sendMessage(
+                    JSON.stringify({ type: 'terminal-input', comd: input, terminalId: 1 })
+                );
+            });
 
-            socket.addListener("terminal-output", handleTerminalOutput);
-            socket.addListener("refetch-folder", handleFolerChange);
+            return () => {
+                socket.removeListener('terminal-output');
+                xtermRef.current.dispose();
+            };
         }
-        return () => {
-            if (socket) {
-                socket.removeListener("terminal-output");
-                socket.removeListener("refetch-folder");
-            }
-        };
     }, [socket]);
-
-    const handleKeyDown = (e) => {
-        if (e.key !== 'Enter') return;
-        if (socket) {
-            socket.sendMessage(JSON.stringify({ type: "terminal-input", comd: input + '\n', terminalId: 1 }));
-            setInput("");
-        }
-    };
-
-    const focusInput = () => {
-        inputRef.current.focus();
-    };
 
     return (
         <div
             style={{
-                // width: "calc(100% - 20px)",
-                height: "50%",
-                overflow: "auto",
-                background: "black",
-                outline: "1px solid grey",
-                color: "white",
-                padding: "10px",
+                width: '100%',
+                height: 'calc(50% - 30px)',
+                backgroundColor: '#242424',
+                borderRadius: '5px',
+                border: '1px solid grey',
+                overflow: 'auto',
+                outline:"2px solid red"
             }}
-            onClick={focusInput}
         >
-            <pre style={{ whiteSpace: "pre-wrap" }}>{output}</pre>
-            <input
-                type="text"
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                style={{
-                    width: "80%",
-                    color: "white",
-                    background: "black",
-                    border: "none",
-                    outline: "none",
-                    fontSize: "15px",
-                    letterSpacing: "1.5px"
-                }}
-            />
+            <div ref={terminalRef}  />
         </div>
     );
 };

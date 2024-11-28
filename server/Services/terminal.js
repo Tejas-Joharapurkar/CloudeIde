@@ -18,7 +18,7 @@ export class TerminalManager {
             const terminal = pty.spawn("bash",[], {
                 cols: 100,
                 name: 'xterm',
-                cwd: "/workspace",
+                cwd: `/workspace/${replId}`,
                 env: process.env
             });
             

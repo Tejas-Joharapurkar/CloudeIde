@@ -1,5 +1,42 @@
-.playground{
-    width:100%;
+.playground {
+    width: 100%;
     height: calc(100vh - 1rem);
-    /* outline:2px solid red; */
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #101214;
+    color: white;
+}
+
+.project-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+}
+
+.input-box,
+.dropdown,
+.submit-button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.submit-button {
+    background-color: #007acc;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.submit-button:hover {
+    background-color: #005f99;
 }

@@ -4,7 +4,7 @@ import FolderStructure from './Folder'
 import EdittingSpace from './Editor'
 const Playground = () => {
     return (
-        <div style={{display:"grid",gridTemplateColumns:"1.25fr 5.75fr 3.5fr", columnGap:"0.5rem",height:"100%"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1.25fr 5.8fr 3fr", columnGap:"0.5rem",height:"100%"}}>
             <div style={{height:"100%"}}>
                 <FolderStructure />
             </div>

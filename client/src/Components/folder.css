@@ -2,18 +2,16 @@
 
 .mainFolderContainer{
     height: calc(100% - 2rem);
-    background: #161A1D;
+    background: #181A1F;
     padding:1rem;
 }
 .folderContainer {
     display: flex;
     flex-direction: column;
-    border-left: 0.5px solid #ccc;
     font-family: "Quicksand", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    /* outline: 2px solid green; */
 }
 
 .folderName {
@@ -62,11 +60,23 @@
 
 .file {
     cursor: pointer;
-    padding: 5px 0;
-    font-size: 14px;
+    padding: 3px 0 3px 10px;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 16px;
 }
 
+.activefile{
+    background:#121212;
+    color: rgb(242, 242, 157);
+}
 .file:hover {
-    background-color: #f0f0f0;
+    background-color: #121212;
     border-radius: 3px;
+}
+.folderArrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

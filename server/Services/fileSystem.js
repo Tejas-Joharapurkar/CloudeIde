@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, mkdir} from "fs/promises"
+import { readdir, readFile, writeFile, mkdir } from "fs/promises"
 import { watch } from "fs"
 import path from "path"
 
@@ -11,7 +11,7 @@ export const getFolder = async (currentDir, onData) => {
                 type: file.isDirectory() ? "dir" : "file",
                 name: file.name,
                 path: path.join(currentDir, file.name),
-                status:"saved",
+                status: "saved",
             };
         });
 
@@ -31,9 +31,15 @@ export const getContent = async (path, onData) => {
     }
 }
 
-export const watchChange = (path, socket) => {
-    const watcher = watch(path, { recursive: true }, (eventType, filename) => {
-        socket.send(JSON.stringify({ type: "refetch-folder", filename }))
+export const watchChange = (Path, socket,onData) => {
+    const watcher = watch(Path, { recursive: true }, (eventType, filename) => {
+        if (eventType === 'rename') {
+            console.log(filename);
+            let p = `/workspace/${path.dirname(filename)}`
+            console.log(p);
+            onData(p)
+            // socket.send(JSON.stringify({ type: "refetch-folder", path:p }))
+        }
     });
 
     watcher.on('error', (error) => {
@@ -55,12 +61,12 @@ export const saveFile = async (path, content, onData) => {
     }
 }
 
-export const createFile = async (path,name,ftype) => {
+export const createFile = async (path, name, ftype) => {
     try {
-        if(ftype === 'dir'){
-            await mkdir(`${path}/${name}`,{recursive:true});
-        }else{
-            await writeFile(`${path}/${name}`,"","utf-8");
+        if (ftype === 'dir') {
+            await mkdir(`${path}/${name}`, { recursive: true });
+        } else {
+            await writeFile(`${path}/${name}`, "", "utf-8");
         }
     } catch (error) {
         console.log(error.message);

@@ -2,15 +2,30 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
 import WebSocketService from "../utils/WebSocketService.js"
 
-export const genrateCodingEnv = createAsyncThunk('container/genrateCodingEnv', async (data) => {
-    const response = await axios.post('http://localhost:8000/container', data)
-    return response.data
-})
-export const stopCodingEnv = createAsyncThunk('container/stopCodingEnv', async (data) => {
-    const response = await axios.post('http://localhost:8000/stop', data)
-    alert(response.data)
-    return response.data
-})
+export const genrateCodingEnv = createAsyncThunk(
+    'container/genrateCodingEnv',
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('http://localhost:8000/container', data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const stopCodingEnv = createAsyncThunk(
+    'container/stopCodingEnv',
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('http://localhost:8000/stop', data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
 
 const containerSlice = createSlice({
     name: 'container',
@@ -18,13 +33,12 @@ const containerSlice = createSlice({
         containerName: "",
         containerId: "",
         loading: false,
-        socket:null,
     },
     reducers: {
-        createContainer: (state, action) => {
-            const { name, id } = action.payload;
-            state.containerName = name;
-            state.containerId = id;
+        stopContainer: (state, action) => {
+            state.containerId = "";
+            state.containerName = "",
+            state.loading = false;
         }
     },
     extraReducers: (builder) => {
@@ -37,14 +51,13 @@ const containerSlice = createSlice({
                 const { name, id } = action.payload;
                 state.containerName = name;
                 state.containerId = id;
-                state.socket = WebSocketService.getSocket(`ws://${name}.8000.localhost:80?replId=childProject`);
             })
             .addCase(genrateCodingEnv.rejected, (state, action) => {
                 state.loading = false;
-                console.log("error in genrateCodingEnv.rejected",action.error.message);
+                console.log("error in genrateCodingEnv.rejected", action.error.message);
             });
     },
 })
 
-export const {createContainer} = containerSlice.actions;
+export const { stopContainer } = containerSlice.actions;
 export default containerSlice.reducer;

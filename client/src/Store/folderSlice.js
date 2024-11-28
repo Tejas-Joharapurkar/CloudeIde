@@ -10,8 +10,7 @@ const folderSlice = createSlice({
     },
     reducers:{
         getFolder:(state,action)=>{
-            let name = action.payload[0].path.split('/')[1]
-            state.folder = {type:'dir',path:'/',name,children:action.payload};
+            state.folder = {type:'dir',path:`/workspace/${action.payload.projectName}`,name:action.payload.projectName,children:action.payload.files};
         },
 
         updateFolder:(state,action)=>{
@@ -30,7 +29,7 @@ const folderSlice = createSlice({
                 })
                 return folder;
             }
-            const newFolder = updateFolder(state.folder,2);
+            const newFolder = updateFolder(state.folder,3);
             state.folder = newFolder
             console.log(currentDir);
             console.log(files);
@@ -45,17 +44,22 @@ const folderSlice = createSlice({
             }
         },
 
-        getContent: (state,action)=>{
-            const {name,path,content} = action.payload
-            state.file_content = [...state.file_content,{name,path,content}]
-            state.activeFile = {name,path,content}
+        getContent: (state, action) => {
+            const { name, path, content, status } = action.payload;
+            const present = state.file_content.find(file => file.name === name && file.path === path);
+            if (!present) {
+                state.file_content = [...state.file_content, { name, path, content, status }];
+            }
+            state.activeFile = { name, path, content };
         },
+
         removeContent:(state,action)=>{
-            const {name} = action.payload
+            const name = action.payload
+            console.log(`file removed called ${name}`);
             state.file_content = state.file_content.filter((file)=>file.name !== name);
             if(state.activeFile.name === name){
                 if(state.file_content.length > 0){
-                    state.activeFile = state.file_content[0]
+                    state.activeFile = state.file_content[0];
                 }else{
                     state.activeFile = null
                 }
@@ -63,14 +67,17 @@ const folderSlice = createSlice({
         },
         changeActiveFile:(state,action)=>{
             const data = action.payload
+            console.log(data);
             state.activeFile = data
         },
         updateFileStatus: (state, action) => {
-            const { name, status } = action.payload;
-            const file = state.file_content.find((file) => file.name === name);
-            if (file) {
-                file.status = status;
-            }
+            const { name, status,content } = action.payload;
+            state.file_content = state.file_content.map((file)=>{
+                if(file.name === name){
+                    return {...file,status,content}
+                }
+                return file
+            })
         }
     }
 })

@@ -35,7 +35,9 @@ class WebSocketService {
                 const callback = this.listners.get(type);
                 callback(data);
             } else {
-                alert(`not type found:${type}`)
+                // alert(`not type found:${type}`)
+                console.log(`type not added- ${type}`);
+                
             }
         }
 
@@ -48,8 +50,10 @@ class WebSocketService {
 
     disconnect() {
         if (this.isConnected) {
+            this.instance = null;
             this.socket.close();
             this.socket = null;
+            this.isConnected = false;
         }
     }
 

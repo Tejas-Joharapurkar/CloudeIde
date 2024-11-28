@@ -39,8 +39,12 @@ const initHandlers = (socket, req, replId) => {
                 })
             }
             if (type === 'init-folder') {
-                watchChange("/workspace", socket)
-                await getFolder("/workspace", (files) => {
+                watchChange(`/workspace`, socket,async (path)=>{
+                    await getFolder(path,(files)=>{
+                        socket.send(JSON.stringify({type:"child-folder",files,currentDir:path}))
+                    })
+                })
+                await getFolder(`/workspace/${replId}`, (files) => {
                     socket.send(JSON.stringify({ type: "files",files }))
                 })
             }
@@ -55,7 +59,7 @@ const initHandlers = (socket, req, replId) => {
                 let name = path.split('/');
                 name = name[name.length - 1];
                 await getContent(path,(data)=>{
-                    socket.send(JSON.stringify({type:"file-content",content:data,name,path}))
+                    socket.send(JSON.stringify({type:"file-content",content:data,name,path,status:"saved"}))
                 })
             }
             if(type === "get-folder"){
@@ -75,9 +79,6 @@ const initHandlers = (socket, req, replId) => {
             if(type === "create-file"){
                 let{name,path,ftype} = message
                 await createFile(path,name,ftype);
-                await getFolder(path,(files)=>{
-                    socket.send(JSON.stringify({type:"child-folder",files,currentDir:path}))
-                })
             }
         })
     } catch (error) {
